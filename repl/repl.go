@@ -8,9 +8,9 @@ import (
 	"monkey-interpreter/parser"
 )
 
-const PROMPT = ">> "
+const Prompt = ">> "
 
-const MONKEY_FACE = `            __,__
+const MonkeyFace = `            __,__
    .--.  .-"     "-.  .--.
   / .. \/  .-. .-.  \/ .. \
  | |  '|  /   Y   \  |'  | |
@@ -27,7 +27,7 @@ func Start(in io.Reader, out io.Writer) {
 	scanner := bufio.NewScanner(in)
 
 	for {
-		fmt.Printf(PROMPT)
+		fmt.Printf(Prompt)
 		scanned := scanner.Scan()
 		if !scanned {
 			return
@@ -49,7 +49,7 @@ func Start(in io.Reader, out io.Writer) {
 }
 
 func printParserErrors(out io.Writer, errors []string) {
-	_, _ = io.WriteString(out, MONKEY_FACE)
+	_, _ = io.WriteString(out, MonkeyFace)
 	_, _ = io.WriteString(out, "Woops! We ran into some monkey business here!\n")
 	_, _ = io.WriteString(out, " parser errors:\n")
 	for _, msg := range errors {
