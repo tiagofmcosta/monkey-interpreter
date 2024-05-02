@@ -3,6 +3,7 @@ package evaluator
 import (
 	"monkey-interpreter/ast"
 	"monkey-interpreter/object"
+	"monkey-interpreter/token"
 )
 
 var (
@@ -27,6 +28,10 @@ func Eval(node ast.Node) object.Object {
 	case *ast.PrefixExpression:
 		right := Eval(node.Right)
 		return evalPrefixExpression(node.Operator, right)
+	case *ast.InfixExpression:
+		left := Eval(node.Left)
+		right := Eval(node.Right)
+		return evalInfixExpression(node.Operator, left, right)
 	}
 
 	return nil
@@ -52,9 +57,9 @@ func nativeBoolToBooleanObject(input bool) *object.Boolean {
 
 func evalPrefixExpression(operator string, right object.Object) object.Object {
 	switch operator {
-	case "!":
+	case token.Bang:
 		return evalBangOperatorExpression(right)
-	case "-":
+	case token.Minus:
 		return evalMinusPrefixOperatorExpression(right)
 	default:
 		return Null
@@ -80,5 +85,44 @@ func evalBangOperatorExpression(right object.Object) object.Object {
 		return True
 	default:
 		return False
+	}
+}
+
+func evalInfixExpression(operator string, left, right object.Object) object.Object {
+	switch {
+	case left.Type() == object.IntegerObj && right.Type() == object.IntegerObj:
+		return evalIntegerInfixExpression(operator, left, right)
+	case operator == token.Equal:
+		return nativeBoolToBooleanObject(left == right)
+	case operator == token.NotEqual:
+		return nativeBoolToBooleanObject(left != right)
+	default:
+		return Null
+	}
+}
+
+func evalIntegerInfixExpression(operator string, left, right object.Object) object.Object {
+	leftVal := left.(*object.Integer).Value
+	rightVal := right.(*object.Integer).Value
+
+	switch operator {
+	case token.Plus:
+		return &object.Integer{Value: leftVal + rightVal}
+	case token.Minus:
+		return &object.Integer{Value: leftVal - rightVal}
+	case token.Asterisk:
+		return &object.Integer{Value: leftVal * rightVal}
+	case token.Slash:
+		return &object.Integer{Value: leftVal / rightVal}
+	case token.LesserThan:
+		return nativeBoolToBooleanObject(leftVal < rightVal)
+	case token.GreaterThan:
+		return nativeBoolToBooleanObject(leftVal > rightVal)
+	case token.Equal:
+		return nativeBoolToBooleanObject(leftVal == rightVal)
+	case token.NotEqual:
+		return nativeBoolToBooleanObject(leftVal != rightVal)
+	default:
+		return Null
 	}
 }

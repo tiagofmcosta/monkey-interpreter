@@ -27,7 +27,7 @@ func (lexer *Lexer) NextToken() token.Token {
 		if lexer.peekChar() == '=' {
 			char := lexer.char
 			lexer.readChar()
-			tok = token.Token{Type: token.Eq, Literal: string(char) + string(lexer.char)}
+			tok = token.Token{Type: token.Equal, Literal: string(char) + string(lexer.char)}
 		} else {
 			tok = newToken(token.Assign, lexer.char)
 		}
@@ -39,7 +39,7 @@ func (lexer *Lexer) NextToken() token.Token {
 		if lexer.peekChar() == '=' {
 			char := lexer.char
 			lexer.readChar()
-			tok = token.Token{Type: token.NotEq, Literal: string(char) + string(lexer.char)}
+			tok = token.Token{Type: token.NotEqual, Literal: string(char) + string(lexer.char)}
 		} else {
 			tok = newToken(token.Bang, lexer.char)
 		}
@@ -48,9 +48,9 @@ func (lexer *Lexer) NextToken() token.Token {
 	case '*':
 		tok = newToken(token.Asterisk, lexer.char)
 	case '<':
-		tok = newToken(token.Lt, lexer.char)
+		tok = newToken(token.LesserThan, lexer.char)
 	case '>':
-		tok = newToken(token.Gt, lexer.char)
+		tok = newToken(token.GreaterThan, lexer.char)
 	case ';':
 		tok = newToken(token.Semicolon, lexer.char)
 	case ',':

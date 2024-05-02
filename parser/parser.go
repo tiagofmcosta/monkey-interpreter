@@ -20,15 +20,15 @@ const (
 )
 
 var precedences = map[token.Type]int{
-	token.Eq:       Equals,
-	token.NotEq:    Equals,
-	token.Lt:       LesserGreater,
-	token.Gt:       LesserGreater,
-	token.Plus:     Sum,
-	token.Minus:    Sum,
-	token.Slash:    Product,
-	token.Asterisk: Product,
-	token.LParen:   Call,
+	token.Equal:       Equals,
+	token.NotEqual:    Equals,
+	token.LesserThan:  LesserGreater,
+	token.GreaterThan: LesserGreater,
+	token.Plus:        Sum,
+	token.Minus:       Sum,
+	token.Slash:       Product,
+	token.Asterisk:    Product,
+	token.LParen:      Call,
 }
 
 type Parser struct {
@@ -64,10 +64,10 @@ func New(l *lexer.Lexer) *Parser {
 	p.registerInfix(token.Minus, p.parseInfixExpression)
 	p.registerInfix(token.Slash, p.parseInfixExpression)
 	p.registerInfix(token.Asterisk, p.parseInfixExpression)
-	p.registerInfix(token.Eq, p.parseInfixExpression)
-	p.registerInfix(token.NotEq, p.parseInfixExpression)
-	p.registerInfix(token.Lt, p.parseInfixExpression)
-	p.registerInfix(token.Gt, p.parseInfixExpression)
+	p.registerInfix(token.Equal, p.parseInfixExpression)
+	p.registerInfix(token.NotEqual, p.parseInfixExpression)
+	p.registerInfix(token.LesserThan, p.parseInfixExpression)
+	p.registerInfix(token.GreaterThan, p.parseInfixExpression)
 	p.registerInfix(token.LParen, p.parseCallExpression)
 
 	// Read two tokens, so curToken and peekToken are both set
